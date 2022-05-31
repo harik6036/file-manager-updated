@@ -1,50 +1,41 @@
-let fs= require("fs");
-let path= require("path");
-let folderpath=process.argv[2];
-let folderExists=fs.existsSync(folderpath);
-let extensions={
-    Audio:[".mp3"],
-    Video:[".mp4",".mkv"], 
-    document:[".doc",".xlsx",".pdf",".txt"],
-    image:[".jpeg",".jpg",".png",".gif"],
-    software:[".exe"]
-};
-if(folderExists){
-    let files=fs.readdirSync(folderpath);
-    for(let i=0;i<files.length;i++){
-        let ext=path.extname(files[i]);
-        let nameofFolder=giveFolderName(ext);
-        let pathofFolder= path.join(folderpath,nameofFolder);
-        let exist=fs.existsSync(pathofFolder);
-        if(exist)
-        {
-            moveFile(folderpath,pathofFolder,files[i]);
+//organize
+//tree
+//help
+//
+//command dirpath
 
-        }
-        else {
-            fs.mkdirSync(pathofFolder);
-            moveFile(folderpath,pathofFolder,files[i]);
-        }
-    }
+let command=process.argv[2];
+let dirpath= process.argv[3];
+let treeobject=require("./tree.js");
+//let helpobject=require("../help");
+let organizeobject=require("./organize.js");
+
+// console.log(command);
+// console.log(dirpath);
+switch(command)
+{
+    case "organize":
+        organizeobject.organizekey(dirpath);
+       break;
+
+      
+    case "help":
+        //console.log("the help fn is implemented");
+        helpfn()
+        break;
+
+        default:
+            console.log("enter the correct command");
 }
-else{
-    console.log("please enter a valid path");
-}
-function giveFolderName(ext){
-    for(let key in extensions){
-        let extarr=extensions[key];
-        for(let i=0;i<extarr.length;i++)
-        {
-            if(extarr[i]==ext){
-                return key;
-            }
-        }
-    }
-    return 'others'
-}
-function moveFile(folderpath,pathofFolder,fileName){
-    let sourcePath=path.join(folderpath,fileName);
-    let destinationPath=path.join(pathofFolder,fileName);
-    fs.copyFileSync(sourcePath,destinationPath);
-    fs.unlinkSync(sourcePath);
+
+
+
+
+function helpfn(){
+console.log(`following are the commands
+1 organize "dirpath"
+2 tree "dirpath"
+3 help`);
+
+
 }
